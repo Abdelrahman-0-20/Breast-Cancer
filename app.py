@@ -6,6 +6,7 @@ import seaborn as sns
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import StandardScaler
+from sklearn.impute import SimpleImputer                        # <-- added
 from sklearn.pipeline import Pipeline
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -298,10 +299,14 @@ with tab4:
             n_jobs=-1
         )
 
+    # -----------------------------------------------------------------
+    # FIXED: Added imputer to handle NaN values
     pipeline = Pipeline([
+        ("imputer", SimpleImputer(strategy="mean")),   # <-- impute missing values
         ("scaler", StandardScaler()),
         ("classifier", model)
     ])
+    # -----------------------------------------------------------------
 
     cv_folds = st.slider("Cross-validation folds", 3, 10, 5)
     if st.button("Train and Evaluate Model"):
